@@ -1,0 +1,16 @@
+domain: tls.certreloader.io
+layout:
+  - go.kubebuilder.io/v4
+projectName: auto-tls-certreloader
+repo: github.com/HashanHirantha/auto-tls-certreloader
+version: "3"
+resources:
+  - api:
+      crdVersion: v1
+      namespaced: true
+    controller: true
+    domain: tls.certreloader.io
+    group: tls
+    kind: TLSCertWatch
+    path: github.com/HashanHirantha/auto-tls-certreloader/api/v1alpha1
+    version: v1alpha1

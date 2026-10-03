@@ -1,0 +1,6 @@
+namespace: certreloader-system
+
+resources:
+  - ../crd
+  - ../rbac
+  - ../manager

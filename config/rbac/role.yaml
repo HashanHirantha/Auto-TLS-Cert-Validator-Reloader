@@ -1,0 +1,80 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: certreloader-role
+rules:
+  # TLSCertWatch CRD access
+  - apiGroups:
+      - tls.certreloader.io
+    resources:
+      - tlscertwatches
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - tls.certreloader.io
+    resources:
+      - tlscertwatches/status
+    verbs:
+      - get
+      - update
+      - patch
+  - apiGroups:
+      - tls.certreloader.io
+    resources:
+      - tlscertwatches/finalizers
+    verbs:
+      - update
+
+  # Read Secrets and ConfigMaps for certificate data
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+
+  # Create Events for audit trail
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+
+  # Patch Deployments, StatefulSets, DaemonSets to trigger restarts
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+    verbs:
+      - get
+      - list
+      - watch
+      - update
+      - patch
+
+  # Leader election
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete

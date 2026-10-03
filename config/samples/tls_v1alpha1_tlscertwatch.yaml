@@ -1,0 +1,40 @@
+# Example TLSCertWatch resource
+# This watches a TLS Secret and triggers rolling restarts of the target Deployment
+# when the certificate changes or becomes invalid.
+apiVersion: tls.certreloader.io/v1alpha1
+kind: TLSCertWatch
+metadata:
+  name: my-app-tls-watch
+  namespace: default
+spec:
+  # Reference to the Secret containing the TLS certificate
+  certificateRef:
+    kind: Secret
+    name: my-app-tls-secret
+    certKey: tls.crt
+    keyKey: tls.key
+    caKey: ca.crt
+
+  # Validation settings
+  validation:
+    checkExpiry: true
+    expiryThresholdDays: 30
+    checkChain: true
+    checkHostnames:
+      - "*.example.com"
+      - "api.example.com"
+
+  # Workloads to restart when the certificate changes
+  targets:
+    - kind: Deployment
+      name: my-app
+      namespace: default
+
+  # Re-check every 60 minutes (in addition to watch events)
+  checkIntervalMinutes: 60
+
+  # Strategy: patch pod template annotation → triggers rolling update
+  reloadStrategy: RollingRestart
+
+  # Set to true to pause reconciliation
+  paused: false

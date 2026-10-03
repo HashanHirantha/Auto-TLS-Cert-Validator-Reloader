@@ -1,0 +1,2 @@
+resources:
+  - bases/tls.certreloader.io_tlscertwatches.yaml
